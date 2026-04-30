@@ -1,0 +1,35 @@
+{
+  "entities": {
+    "Message": {
+      "title": "Chat Message",
+      "description": "A single message in a conversation",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["user", "model"] },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["role", "content"]
+    },
+    "Chat": {
+      "title": "Conversation",
+      "description": "A chat session containing multiple messages",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}/chats/{chatId}": {
+      "schema": "Chat",
+      "description": "User's individual chat sessions"
+    },
+    "/users/{userId}/chats/{chatId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Messages within a specific chat session"
+    }
+  }
+}
