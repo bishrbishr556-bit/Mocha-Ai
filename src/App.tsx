@@ -19,9 +19,12 @@ import PaymentPage from './components/payment/PaymentPage';
 import ContactPage from './components/app/ContactPage';
 import SuccessPage from './components/payment/SuccessPage';
 import Toast, { ToastType } from './components/ui/Toast';
+import { getUserSettings } from './services/firestoreService';
 
-type View = 'landing' | 'login' | 'signup' | 'app' | 'dashboard' | 'canvas' | 'image-gen' | 'music-gen' | 'research' | 'learning' | 'settings' | 'admin' | 'payment' | 'contact' | 'success';
+type View = 'landing' | 'login' | 'signup' | 'app' | 'dashboard' | 'canvas' | 'image-gen' | 'music-gen' | 'research' | 'learning' | 'settings' | 'admin' | 'payment' | 'contact' | 'success' | 'loom';
 type Plan = 'free' | 'pro' | 'premium';
+
+import DigitalLoom from './components/tools/DigitalLoom';
 
 export default function App() {
   const [view, setView] = useState<View>('landing');
@@ -31,6 +34,7 @@ export default function App() {
     return (localStorage.getItem('mocha_plan') as Plan) || 'free';
   });
   const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null);
+  const [appLogoUrl, setAppLogoUrl] = useState('');
 
   const showToast = (message: string, type: ToastType = 'info') => {
     setToast({ message, type });
@@ -42,10 +46,17 @@ export default function App() {
   }, [plan]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
+    const unsubscribe = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       setLoading(false);
-      if (u && view === 'login') setView('app');
+      if (u) {
+        if (view === 'login') setView('app');
+        // Fetch global settings
+        const settings = await getUserSettings(u.uid);
+        if (settings?.appLogoUrl) {
+           setAppLogoUrl(settings.appLogoUrl);
+        }
+      }
     });
     return () => unsubscribe();
   }, [view]);
@@ -60,7 +71,7 @@ export default function App() {
   };
 
   if (loading) {
-    return <LoadingScreen />;
+    return <LoadingScreen logoUrl={appLogoUrl} />;
   }
 
   return (
@@ -69,6 +80,7 @@ export default function App() {
         <LandingPage 
           onOpenApp={handleOpenApp} 
           onLogin={() => setView('login')}
+          appLogoUrl={appLogoUrl}
           onNavigate={(v) => {
             if ((v === 'app' || v === 'payment' || v === 'dashboard') && !user) {
                setView('login');
@@ -86,6 +98,7 @@ export default function App() {
           onToggle={() => setView('signup')} 
           onSuccess={() => setView('app')}
           onBack={() => setView('landing')}
+          appLogoUrl={appLogoUrl}
         />
       )}
 
@@ -94,6 +107,7 @@ export default function App() {
           onToggle={() => setView('login')} 
           onSuccess={() => setView('app')}
           onBack={() => setView('landing')}
+          appLogoUrl={appLogoUrl}
         />
       )}
 
@@ -103,12 +117,14 @@ export default function App() {
           onNavigate={(v) => setView(v)} 
           userPlan={plan} 
           showToast={showToast}
+          appLogoUrl={appLogoUrl}
         />
       )}
       {view === 'dashboard' && (
         <Dashboard 
           onBack={() => setView('landing')} 
           userPlan={plan} 
+          appLogoUrl={appLogoUrl}
           onNavigate={(v) => {
             if ((v === 'app' || v === 'payment' || v === 'dashboard') && !user) {
                setView('login');
@@ -126,7 +142,8 @@ export default function App() {
       {view === 'research' && <ResearchTool onBack={() => setView('app')} />}
       {view === 'learning' && <LearningTool onBack={() => setView('app')} />}
       {view === 'settings' && <SettingsPage onBack={() => setView('app')} userPlan={plan} />}
-      {view === 'admin' && <AdminPanel onBack={() => setView('app')} />}
+      {view === 'admin' && <AdminPanel onBack={() => setView('app')} showToast={showToast} />}
+      {view === 'loom' && <DigitalLoom onBack={() => setView('dashboard')} />}
       {view === 'payment' && (
         <PaymentPage 
           onBack={() => setView('landing')} 
@@ -141,7 +158,7 @@ export default function App() {
         showToast('Inquiry Sent Successfully', 'success');
         setView('landing');
       }} />}
-      {view === 'success' && <SuccessPage onComplete={() => setView('dashboard')} />}
+      {view === 'success' && <SuccessPage onComplete={() => setView('loom')} />}
       
       <AnimatePresence>
         {toast && (

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Image as ImageIcon, ChevronLeft, Send, Sparkles, Wand2, Download, Layers, Eye } from 'lucide-react';
 import { useState } from 'react';
+import { generateImage } from '../../services/geminiService';
 
 export default function ImageTool({ onBack }: { onBack: () => void }) {
   const [prompt, setPrompt] = useState('');
@@ -8,16 +9,16 @@ export default function ImageTool({ onBack }: { onBack: () => void }) {
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [selectedStyle, setSelectedStyle] = useState('Cinematic');
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+    if (!prompt.trim()) return;
     setIsGenerating(true);
-    // Mock generation
-    setTimeout(() => {
-      setGeneratedImages(prev => [
-        `https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2574&auto=format&fit=crop`,
-        ...prev
-      ]);
-      setIsGenerating(false);
-    }, 2500);
+    
+    const url = await generateImage(prompt + ", style: " + selectedStyle);
+    
+    if (url) {
+      setGeneratedImages(prev => [url, ...prev]);
+    }
+    setIsGenerating(false);
   };
 
   return (

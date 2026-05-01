@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Validation Helpers ---
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['role', 'content', 'timestamp'])
+        && data.keys().size() == 3
+        && data.role in ['user', 'model']
+        && data.content is string && data.content.size() <= 10000
+        && data.timestamp == request.time;
+    }
+
+    function isValidChat(data) {
+      return data.keys().hasAll(['title', 'createdAt', 'updatedAt'])
+        && data.keys().size() == 3
+        && data.title is string && data.title.size() <= 200
+        && data.createdAt == request.time
+        && data.updatedAt == request.time;
+    }
+
+    function isValidUserSettings(data) {
+      return data.keys().hasAll(['displayName', 'handle', 'bio', 'emailAlerts', 'pushAlerts', 'creativity', 'verbosity', 'updatedAt'])
+        && data.keys().size() == 8
+        && data.displayName is string && data.displayName.size() <= 100
+        && data.handle is string && data.handle.size() <= 50
+        && data.bio is string && data.bio.size() <= 500
+        && data.emailAlerts is bool
+        && data.pushAlerts is bool
+        && data.creativity is number && data.creativity >= 0 && data.creativity <= 1
+        && data.verbosity in ['Concise', 'Balanced', 'Deep Roast']
+        && data.updatedAt == request.time;
+    }
+
+    // --- Collection Routes ---
+
+    match /users/{userId} {
+      
+      // User Config (Settings)
+      match /config/settings {
+        allow get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidUserSettings(incoming());
+        allow update: if isOwner(userId) 
+          && isValidUserSettings(incoming())
+          // No affectedKeys check here for simple full-doc updates, 
+          // but we follow the Action-Based pattern if needed.
+          // For settings, usually any field can change.
+          && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'handle', 'bio', 'emailAlerts', 'pushAlerts', 'creativity', 'verbosity', 'updatedAt']);
+      }
+
+      // Chats
+      match /chats/{chatId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId); // Query Enforcer
+        allow create: if isOwner(userId) && isValidId(chatId) && isValidChat(incoming());
+        allow update: if isOwner(userId) 
+          && isValidChat(incoming())
+          && incoming().createdAt == existing().createdAt
+          && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'updatedAt']);
+        allow delete: if isOwner(userId);
+
+        // Messages
+        match /messages/{messageId} {
+          allow list: if isOwner(userId);
+          allow get: if isOwner(userId);
+          allow create: if isOwner(userId) && isValidId(messageId) && isValidMessage(incoming());
+        }
+      }
+    }
+  }
+}

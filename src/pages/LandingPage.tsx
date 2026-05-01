@@ -1,558 +1,395 @@
+import React from 'react';
 import { motion } from 'motion/react';
-import { Coffee, Menu, X, ArrowRight, Play, Sparkles, Send } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Sparkles, Brain, Mic, Zap, ArrowRight, MessageSquare, Shield, Smartphone, GraduationCap, ChevronDown, Mail } from 'lucide-react';
+import Logo from '../components/ui/Logo';
 
-const Navbar = ({ onOpenApp, onLogin }: { onOpenApp: () => void, onLogin: () => void }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+export default function LandingPage({ onOpenApp, onLogin, onNavigate, appLogoUrl, currentPlan }: { onOpenApp: () => void, onLogin: () => void, onNavigate: (v: string) => void, appLogoUrl?: string, currentPlan: string }) {
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 px-6 py-4">
-      <div className="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex items-center justify-between shadow-2xl">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-gold-500 rounded-xl flex items-center justify-center text-mocha-950 rotate-3 shadow-lg group hover:rotate-0 transition-transform">
-            <Coffee className="w-6 h-6" />
-          </div>
-          <span className="font-serif text-xl font-bold tracking-tight text-white italic">Mocha AI</span>
-        </div>
-
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-mocha-200">
-          <a href="#features" className="hover:text-gold-400 transition-colors">Features</a>
-          <a href="#pricing" className="hover:text-gold-400 transition-colors">Pricing</a>
-          <button 
-            onClick={onLogin}
-            className="text-mocha-100 hover:text-gold-400 font-bold transition-colors"
-          >
-            Sign In
-          </button>
-          <button 
-            onClick={onOpenApp}
-            className="bg-gold-500 text-mocha-950 px-5 py-2 rounded-xl font-bold hover:bg-gold-400 transition-all shadow-lg active:scale-95"
-          >
-            Launch Chat
-          </button>
-        </div>
-
-        {/* Mobile Toggle */}
-        <button className="md:hidden text-mocha-100" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-      
-      {/* Mobile Menu (simplified) */}
-      {isOpen && (
-        <div className="md:hidden mt-4 glass rounded-2xl p-6 flex flex-col gap-4">
-          <a href="#features" onClick={() => setIsOpen(false)}>Features</a>
-          <a href="#pricing" onClick={() => setIsOpen(false)}>Pricing</a>
-          <button onClick={() => { onOpenApp(); setIsOpen(false); }} className="bg-gold-500 text-mocha-950 py-3 rounded-xl font-bold">Launch App</button>
-        </div>
-      )}
-    </nav>
-  );
-};
-
-const Hero = ({ onOpenApp }: { onOpenApp: () => void }) => {
-  const [displayText, setDisplayText] = useState("");
-  const fullText = "Smarter. Faster. More Human than ever.";
-  
-  useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      setDisplayText(fullText.slice(0, i));
-      i++;
-      if (i > fullText.length) clearInterval(timer);
-    }, 50);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <section className="relative pt-32 pb-20 px-6 overflow-hidden min-h-screen flex items-center">
-      {/* Background Decor */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gold-600/5 blur-[150px] rounded-full" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-mocha-600/5 blur-[120px] rounded-full" />
+    <div className="relative min-h-screen bg-primary-black overflow-hidden selection:bg-purple-500 selection:text-white font-sans">
+      {/* Background Orbs */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-500/5 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-500/10 blur-[120px] rounded-full animate-pulse delay-700" />
       </div>
 
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
-        <motion.div
-           initial={{ opacity: 0, x: -50 }}
-           animate={{ opacity: 1, x: 0 }}
-           transition={{ duration: 0.8 }}
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gold-400 text-xs font-mono mb-8 tracking-widest uppercase">
-            <Sparkles size={12} /> THE BRAIN BEHIND YOUR DIGITAL LIFE
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 w-full z-50 px-6 py-8 transition-all duration-300">
+        <div className="max-w-7xl mx-auto flex items-center justify-between bg-black/40 backdrop-blur-xl px-10 py-5 rounded-full border border-white/5 shadow-2xl">
+          <div className="flex items-center gap-4 group cursor-pointer" onClick={() => onNavigate('landing')}>
+            <Logo size={48} url={appLogoUrl} />
+            <div className="flex flex-col">
+              <span className="font-display text-xl font-black tracking-tight text-white leading-none uppercase">Mocha <span className="text-purple-500">AI</span></span>
+              <span className="text-[10px] font-mono text-white/40 tracking-[0.3em] uppercase mt-1">Innovation Core</span>
+            </div>
           </div>
-          <h1 className="text-6xl md:text-8xl font-serif font-bold text-white leading-[1.05] mb-8 italic tracking-tighter">
-            Meet <span className="text-gold-500">Mocha AI</span>. <br />
-            Personalized <br />Intelligence.
-          </h1>
-          <p className="text-mocha-400 text-xl font-mono min-h-[1.5em] mb-12">
-            {displayText}<span className="animate-pulse text-gold-500">|</span>
-          </p>
-          <div className="flex flex-wrap gap-6">
+          
+          <div className="hidden lg:flex items-center gap-8 text-sm font-medium">
+             <a href="#" className="text-white bg-white/10 px-6 py-2 rounded-xl font-bold transition-all border border-white/10 shadow-lg shadow-purple-500/10 relative overflow-hidden group">
+               <span className="relative z-10">Home</span>
+               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 group-hover:h-1 transition-all" />
+             </a>
+            {['About', 'Committee', 'Students', 'Events', 'Gallery', 'Contact'].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="text-white/60 hover:text-white transition-all duration-300 text-[13px] font-bold">{item}</a>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-4">
             <button 
               onClick={onOpenApp}
-              className="px-10 py-5 bg-gold-500 text-mocha-950 rounded-2xl font-bold text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(212,175,55,0.3)] flex items-center gap-2"
+              className="px-8 py-3.5 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 text-white rounded-2xl font-bold text-sm flex items-center gap-2 hover:scale-[1.05] active:scale-95 transition-all shadow-[0_0_30px_rgba(147,51,234,0.3)] border border-white/10"
             >
-              Start for Free <ArrowRight size={20} />
-            </button>
-            <button className="px-10 py-5 glass text-white rounded-2xl font-bold text-xl hover:bg-white/10 transition-all flex items-center gap-2 group">
-              <Play size={20} fill="currentColor" className="group-hover:scale-110 transition-transform" /> Watch Demo
+              <Sparkles size={16} />
+              Get Started
             </button>
           </div>
-          
-          <div className="mt-16 flex items-center gap-8">
-            <div className="flex -space-x-4">
-              {[1,2,3,4].map(i => (
-                <div key={i} className="w-12 h-12 rounded-full border-4 border-mocha-950 bg-mocha-800 flex items-center justify-center text-[10px] font-bold overflow-hidden">
-                   <img src={`https://i.pravatar.cc/150?u=${i}`} alt="user" />
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-mocha-500">Trusted by <span className="text-mocha-100 font-bold">1M+</span> discernment-driven professionals</p>
-          </div>
-        </motion.div>
+        </div>
+      </nav>
 
-        <motion.div 
-           initial={{ opacity: 0, scale: 0.8 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 1, delay: 0.2 }}
-           className="relative"
+      {/* Hero Section */}
+      <section className="relative pt-48 pb-20 px-6 max-w-7xl mx-auto text-center" id="home">
+        <motion.div
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8 }}
+           className="flex flex-col items-center"
         >
-          {/* Futuristic Mockup Frame */}
-          <div className="glass rounded-[4rem] p-4 shadow-[0_0_100px_rgba(212,175,55,0.1)] relative z-10">
-             <div className="absolute inset-0 bg-gradient-to-tr from-gold-500/10 to-transparent rounded-[4rem] pointer-events-none" />
-             <img 
-               src="https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2574&auto=format&fit=crop" 
-               alt="AI Visual" 
-               className="w-full h-auto rounded-[3.2rem]"
-             />
-          </div>
-          
-          {/* Floating UI Elements */}
           <motion.div 
-            animate={{ y: [0, -15, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -right-10 top-1/4 glass-dark p-6 rounded-3xl shadow-2xl z-20 border-white/5"
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="mb-10"
           >
-             <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gold-500 rounded-xl flex items-center justify-center text-mocha-950"><Sparkles size={20} /></div>
-                <div>
-                   <p className="text-xs font-bold text-white">Neural Load</p>
-                   <p className="text-[10px] text-mocha-500">Optimized Blend</p>
-                </div>
-             </div>
-             <div className="h-1 bg-mocha-800 rounded-full w-32 overflow-hidden">
-                <motion.div animate={{ width: ['0%', '85%'] }} transition={{ duration: 2, delay: 1 }} className="h-full bg-gold-500" />
-             </div>
+            <Logo size={120} url={appLogoUrl} className="shadow-[0_0_50px_rgba(147,51,234,0.2)]" />
           </motion.div>
+
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-purple-400 text-xs font-mono mb-8 tracking-[0.3em] uppercase backdrop-blur-md">
+            <Sparkles size={14} className="animate-pulse" /> Your Intelligent AI Assistant 🤖
+          </div>
+
+          <h1 className="text-5xl md:text-8xl font-display font-bold text-cream-text mb-8 leading-[1.1] tracking-tight">
+            The Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-purple-400">Excellence</span> Is Here
+          </h1>
+          
+          <p className="max-w-2xl mx-auto text-cream-text/40 text-lg md:text-xl font-light mb-12 leading-relaxed">
+            Connect, Collaborate, and Innovate with Mocha AI. A premium digital ecosystem designed to brew excellence into your daily digital workflow.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <button 
+              onClick={onOpenApp}
+              className="px-10 py-5 bg-purple-600 text-white rounded-2xl font-bold text-lg flex items-center gap-3 hover:bg-purple-500 transition-all shadow-[0_10px_30px_rgba(147,51,234,0.3)] active:scale-95"
+            >
+              Start For Free <ArrowRight size={20} />
+            </button>
+            <button 
+              onClick={() => onNavigate('dashboard')}
+              className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-cream-text font-semibold hover:bg-white/10 transition-all duration-300"
+            >
+              View Analytics
+            </button>
+          </div>
         </motion.div>
-      </div>
-    </section>
-  );
-};
+      </section>
 
-export default function LandingPage({ onOpenApp, onLogin, onNavigate, currentPlan }: { onOpenApp: () => void, onLogin: () => void, onNavigate: (v: string) => void, currentPlan: string }) {
-  return (
-    <div className="bg-mocha-950 min-h-screen">
-      <Navbar onOpenApp={onOpenApp} onLogin={onLogin} />
-      <Hero onOpenApp={onOpenApp} />
-      
-      {/* Live AI Demo Section */}
-      <section className="py-24 px-6 relative overflow-hidden bg-mocha-900/30">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
-           <div>
-              <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-8 italic">Experience <br />Instant Fusion.</h2>
-              <p className="text-mocha-400 text-lg mb-10 leading-relaxed italic">
-                Type a prompt, watch the magic brew. Mocha AI responds with the nuance of a master barista and the logic of a senior architect.
-              </p>
-              <div className="space-y-4">
-                 {["Generate a marketing strategy for a sustainable coffee startup", "Write a secure React component for biometric login", "Explain the history of espresso in a Shakespearean sonnet"].map((prompt, i) => (
-                   <div key={i} className="glass p-5 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-white/10 transition-all border-mocha-800">
-                      <span className="text-sm text-mocha-300 italic">{prompt}</span>
-                      <ArrowRight size={16} className="text-gold-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+      {/* About Section */}
+      <section id="about" className="py-24 px-6 bg-black/20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-6">About Us</h2>
+            <p className="text-cream-text/40 text-lg">Learn about our mission, values, and the community we've built together</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center mb-24">
+             <div className="glass p-10 rounded-[2rem] border-white/5">
+                <h3 className="text-2xl font-bold text-white mb-6 italic">Our Mission</h3>
+                <p className="text-cream-text/60 leading-relaxed mb-6 italic">
+                  Mocha AI is born from the vision of empowering students and professionals with seamless digital tools. We believe in the power of connection and the clarity of intelligence.
+                </p>
+                <div className="flex gap-4">
+                   <div className="flex-1 p-6 bg-white/5 rounded-2xl text-center">
+                      <div className="text-3xl font-black text-purple-400 mb-1">100+</div>
+                      <div className="text-[10px] uppercase tracking-widest text-mocha-500 font-bold">Members</div>
                    </div>
-                 ))}
-              </div>
-           </div>
-           
-           <div className="glass-dark rounded-[3rem] p-8 shadow-[0_0_100px_rgba(0,0,0,0.5)] border-white/5 h-[500px] flex flex-col">
-              <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
-                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-mocha-800 rounded-xl flex items-center justify-center text-gold-500">
-                       <Sparkles size={20} />
-                    </div>
-                    <div>
-                       <p className="text-sm font-bold text-white">Mocha Fusion-3</p>
-                       <p className="text-[10px] text-green-500 font-mono tracking-widest uppercase">Steaming Live</p>
-                    </div>
-                 </div>
-                 <div className="flex gap-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full" />
-                    <div className="w-3 h-3 bg-gold-500 rounded-full" />
-                    <div className="w-3 h-3 bg-green-500 rounded-full" />
-                 </div>
-              </div>
-              
-              <div className="flex-1 space-y-6 overflow-hidden">
-                 <motion.div 
-                   initial={{ x: -20, opacity: 0 }}
-                   whileInView={{ x: 0, opacity: 1 }}
-                   className="glass p-4 rounded-2xl rounded-tl-none max-w-[80%]"
-                 >
-                    <p className="text-xs text-mocha-300">How can I brew excellence for you today?</p>
-                 </motion.div>
-                 
-                 <motion.div 
-                   initial={{ x: 20, opacity: 0 }}
-                   whileInView={{ x: 0, opacity: 1 }}
-                   transition={{ delay: 1 }}
-                   className="bg-gold-500 text-mocha-950 p-4 rounded-2xl rounded-tr-none max-w-[80%] ml-auto"
-                 >
-                    <p className="text-xs font-bold">Write a Python script for a coffee temperature sensor.</p>
-                 </motion.div>
-
-                 <motion.div 
-                   initial={{ opacity: 0 }}
-                   whileInView={{ opacity: 1 }}
-                   transition={{ delay: 2 }}
-                   className="glass p-6 rounded-2xl rounded-tl-none border-gold-500/20"
-                 >
-                    <p className="text-[10px] font-mono text-gold-500 mb-2 uppercase tracking-widest">Mocha Code</p>
-                    <p className="text-xs text-mocha-300 font-mono leading-relaxed">
-                       import time<br />
-                       class MochaSensor:<br />
-                       &nbsp;&nbsp;def watch_roast(self):<br />
-                       &nbsp;&nbsp;&nbsp;&nbsp;return "Roasted to Perfection"
-                    </p>
-                 </motion.div>
-              </div>
-              
-              <div className="mt-8 pt-6 border-t border-white/5 flex gap-4">
-                 <div className="flex-1 h-12 glass rounded-2xl border-white/10 flex items-center px-4">
-                    <span className="text-[10px] text-mocha-600 italic">Waiting for prompt...</span>
-                 </div>
-                 <div className="w-12 h-12 bg-gold-500 rounded-2xl flex items-center justify-center text-mocha-950">
-                    <Send size={20} />
-                 </div>
-              </div>
-           </div>
-        </div>
-      </section>
-
-      {/* App Preview Section */}
-      <section id="preview" className="py-24 px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col items-center">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gold-400 text-xs font-mono mb-8">
-              PREMIUM EXPERIENCE
-           </div>
-           <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-16 text-center italic">The Roasting Room <br />In Your Pocket.</h2>
-           
-           <div className="relative w-full max-w-5xl mx-auto">
-              <motion.div 
-                 initial={{ y: 100, opacity: 0 }}
-                 whileInView={{ y: 0, opacity: 1 }}
-                 viewport={{ once: true }}
-                 className="glass rounded-[4rem] p-4 shadow-[0_0_100px_rgba(212,175,55,0.1)] border-gold-500/10"
-              >
-                 <img 
-                    src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2574&auto=format&fit=crop" 
-                    alt="App Preview" 
-                    className="w-full h-full object-cover rounded-[3.2rem]"
-                 />
-              </motion.div>
-              
-              {/* Floating Mockup Widgets */}
-              <motion.div 
-                animate={{ y: [0, -20, 0] }} 
-                transition={{ duration: 5, repeat: Infinity }}
-                className="absolute -left-12 top-1/4 glass-dark p-6 rounded-3xl shadow-2xl hidden md:block border-mocha-800"
-              >
-                 <div className="flex items-center gap-4 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500"><Sparkles size={20} /></div>
-                    <div>
-                       <p className="text-xs font-bold text-white">Voice Synthesis</p>
-                       <p className="text-[10px] text-mocha-500">Perfectly Roasted Audio</p>
-                    </div>
-                 </div>
-                 <div className="h-1 bg-mocha-800 w-full rounded-full overflow-hidden">
-                    <motion.div initial={{ width: 0 }} whileInView={{ width: '80%' }} className="h-full bg-gold-500" />
-                 </div>
-              </motion.div>
-
-              <motion.div 
-                animate={{ y: [0, 20, 0] }} 
-                transition={{ duration: 6, repeat: Infinity, delay: 1 }}
-                className="absolute -right-12 bottom-1/4 glass-dark p-6 rounded-3xl shadow-2xl hidden md:block border-mocha-800"
-              >
-                 <p className="text-xs font-bold text-gold-500 mb-2">Brew Stats</p>
-                 <div className="flex gap-2 items-end h-16">
-                    {[3, 5, 2, 8, 4].map((h, i) => (
-                      <div key={i} className="flex-1 bg-mocha-800 rounded-sm" style={{ height: `${h * 10}%` }} />
-                    ))}
-                 </div>
-              </motion.div>
-           </div>
-        </div>
-      </section>
-
-      {/* Use Cases Section */}
-      <section id="use-cases" className="py-24 px-6 bg-mocha-900 overflow-hidden">
-         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-center">
-            <div className="lg:w-1/2">
-               <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-8 italic">Blended for Every <br />Discerning Palate.</h2>
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    { title: "Students", desc: "Perfectly brewed summaries and research assistance." },
-                    { title: "Business", desc: "Enterprise-grade automation for your boardroom." },
-                    { title: "Developers", desc: "Roasted code snippets that compile on the first sip." },
-                    { title: "Creators", desc: "Fresh visual ingredients for your next masterpiece." }
-                  ].map((useCase, i) => (
-                    <div key={i} className="glass p-6 rounded-3xl hover:border-gold-500/30 transition-colors">
-                       <h4 className="text-xl font-serif font-bold text-white mb-2 italic">{useCase.title}</h4>
-                       <p className="text-mocha-400 text-xs leading-relaxed">{useCase.desc}</p>
-                    </div>
-                  ))}
-               </div>
-            </div>
-            
-            <div className="lg:w-1/2 relative">
-               <div className="aspect-video glass rounded-[3rem] p-1 shadow-2xl overflow-hidden">
-                  <div className="w-full h-full bg-mocha-800 flex items-center justify-center relative">
-                     <Play size={48} className="text-gold-500 z-10" />
-                     <div className="absolute inset-0 bg-gold-500/5 backdrop-blur-sm" />
-                  </div>
-               </div>
-               <p className="text-center text-mocha-600 text-xs mt-6 font-mono uppercase tracking-widest italic">Experience the Aroma of Innovation</p>
-            </div>
-         </div>
-      </section>
-
-      {/* Security Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-           <div className="w-20 h-20 bg-gold-500/10 rounded-full flex items-center justify-center text-gold-500 mx-auto mb-8 shadow-[0_0_40px_rgba(212,175,55,0.1)]">
-              <Sparkles size={40} />
-           </div>
-           <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-8 italic">Your Private Reserve.</h2>
-           <p className="text-mocha-400 text-lg mb-12 max-w-2xl mx-auto leading-relaxed italic">
-             We roast with a privacy-first philosophy. Your conversations are end-to-end encrypted, and your data beans never leave our secure temperature-controlled vaults.
-           </p>
-           
-           <div className="flex flex-wrap justify-center gap-8">
-              {['SOC2 Type II', 'GDPR Roasted', 'ISO 27001 Blend'].map((badge, i) => (
-                <div key={i} className="px-6 py-2 glass rounded-full text-mocha-300 text-xs font-mono tracking-widest border-mocha-800">
-                   {badge}
-                </div>
-              ))}
-           </div>
-        </div>
-      </section>
-
-      {/* Why Choose Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
-           <div className="order-2 lg:order-1">
-             <div className="grid grid-cols-2 gap-4">
-                <div className="glass p-6 rounded-3xl h-48 flex flex-col justify-end">
-                   <p className="text-3xl font-serif font-bold text-gold-500">99.9%</p>
-                   <p className="text-xs text-mocha-400 uppercase tracking-widest mt-2">Uptime Brew</p>
-                </div>
-                <div className="glass p-6 rounded-3xl h-64 flex flex-col justify-end translate-y-4">
-                   <p className="text-3xl font-serif font-bold text-gold-500">200ms</p>
-                   <p className="text-xs text-mocha-400 uppercase tracking-widest mt-2">Latte Response</p>
-                </div>
-                <div className="glass p-6 rounded-3xl h-64 flex flex-col justify-end -translate-y-4">
-                   <p className="text-3xl font-serif font-bold text-gold-500">128-bit</p>
-                   <p className="text-xs text-mocha-400 uppercase tracking-widest mt-2">Roasted Encryption</p>
-                </div>
-                <div className="glass p-6 rounded-3xl h-48 flex flex-col justify-end">
-                   <p className="text-3xl font-serif font-bold text-gold-500">Infinite</p>
-                   <p className="text-xs text-mocha-400 uppercase tracking-widest mt-2">Scalability</p>
+                   <div className="flex-1 p-6 bg-white/5 rounded-2xl text-center">
+                      <div className="text-3xl font-black text-indigo-400 mb-1">5★</div>
+                      <div className="text-[10px] uppercase tracking-widest text-mocha-500 font-bold">Rating</div>
+                   </div>
                 </div>
              </div>
-           </div>
-           
-           <div className="order-1 lg:order-2">
-              <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-8 italic">Better than your <br />Morning Coffee.</h2>
-              <div className="space-y-6">
-                 {[
-                   { label: "Secure & Private", sub: "Your data stays in your cup. We never sell your personal 'coffee beans'." },
-                   { label: "Instant Execution", sub: "No cold brews here. Everything is lightning fast and freshly prepared." },
-                   { label: "Multi-language Support", sub: "We speak over 50 global dialects of coffee and code." }
-                 ].map((item, i) => (
-                   <div key={i} className="flex gap-4">
-                      <div className="w-1.5 h-auto bg-gold-500 rounded-full shrink-0" />
-                      <div>
-                        <p className="font-serif text-xl font-bold text-white italic">{item.label}</p>
-                        <p className="text-mocha-400 text-sm mt-1">{item.sub}</p>
-                      </div>
+             <div className="relative aspect-square rounded-[3rem] overflow-hidden group">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2670&auto=format&fit=crop" alt="Campus Life" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+             </div>
+          </div>
+
+          <div className="text-center">
+             <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-4">Class Usthad</h2>
+             <p className="text-cream-text/40 font-mono text-[10px] uppercase tracking-[0.5em] mb-16">The guiding light of Mocha AI Core</p>
+             
+             <div className="max-w-4xl mx-auto glass p-12 rounded-[3rem] border-purple-500/20 relative overflow-hidden group">
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/10 blur-[80px] rounded-full" />
+                <div className="relative flex flex-col md:flex-row items-center gap-12 text-left">
+                   <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-purple-500/30 p-2 shrink-0">
+                      <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2680&auto=format&fit=crop" alt="Usthad" className="w-full h-full object-cover rounded-full" />
                    </div>
-                 ))}
-              </div>
-           </div>
+                   <div>
+                      <div className="text-5xl text-purple-500/30 font-serif mb-4 leading-none">“</div>
+                      <p className="text-lg md:text-xl text-cream-text/80 italic leading-relaxed mb-8">
+                        "It has been a privilege to guide this remarkable class. Each student carries the spirit of Mocha — curiosity, integrity, and the drive to make a difference. I am proud of every one of you."
+                      </p>
+                      <div className="h-px w-20 bg-purple-500/30 mb-6" />
+                      <h4 className="text-2xl font-bold text-white">Hafiz Ahmed Dilqash Furqani</h4>
+                      <p className="text-purple-400 font-mono text-sm uppercase tracking-widest mt-1">Class Teacher • Mocha AI Core 2026</p>
+                   </div>
+                </div>
+             </div>
+          </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-32 px-6 bg-mocha-900 border-y border-mocha-800">
-         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
-            <motion.div
-               initial={{ opacity: 0, x: -20 }}
-               whileInView={{ opacity: 1, x: 0 }}
-            >
-              <h2 className="text-4xl md:text-6xl font-serif font-bold text-white italic tracking-tighter">Select your Roast.</h2>
-              <p className="text-mocha-400 mt-4 max-w-md italic">Simple pricing that scales with your creative and business needs. No hidden fees, just pure filtered intelligence.</p>
-            </motion.div>
-            <div className="flex glass p-1.5 rounded-2xl border-white/5">
-                <button className="px-8 py-3 bg-gold-500 text-mocha-950 rounded-xl text-xs font-bold shadow-2xl transition-all">Monthly</button>
-                <button className="px-8 py-3 text-mocha-400 rounded-xl text-xs font-bold hover:text-white transition-all">Yearly <span className="text-gold-500 ml-1">-20%</span></button>
-            </div>
-         </div>
+      {/* Committee Section */}
+      <section id="committee" className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-7xl font-display font-bold text-white mb-6">Executive Committee</h2>
+            <p className="text-cream-text/40 text-lg">Meet the dedicated team leading Mocha AI innovation</p>
+          </div>
 
-         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { 
-                name: "Single Shot", 
-                price: "Free", 
-                items: ["100 messages/day", "Standard roasting", "Community access"], 
-                button: currentPlan === 'free' ? "Already Subscribed" : "Start Free",
-                action: () => onNavigate('dashboard'),
-                disabled: currentPlan === 'free'
-              },
-              { 
-                name: "Double Espresso", 
-                price: "$29", 
-                items: ["Unlimited messages", "Priority roasting", "Advanced tools", "Beta features"], 
-                button: currentPlan === 'pro' ? "Active Plan" : "Go Pro", 
-                spotlight: true,
-                action: () => onNavigate('payment'),
-                disabled: currentPlan === 'pro'
-              },
-              { 
-                name: "Cold Brew Master", 
-                price: "$99", 
-                items: ["Dedicated cluster", "API access", "SSO integration", "Personal barista support"], 
-                button: currentPlan === 'premium' ? "Active Plan" : "Contact Sales",
-                action: () => onNavigate('contact'),
-                disabled: currentPlan === 'premium'
-              }
-            ].map((plan, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
+              { name: "Yaseen", role: "President", color: "bg-purple-500" },
+              { name: "Rayyan", role: "Treasurer", color: "bg-orange-500" },
+              { name: "Razi", role: "Joint Secretary", color: "bg-pink-500" },
+              { name: "Anas", role: "Working Secretary", color: "bg-emerald-500" },
+              { name: "Ameen", role: "Secretary", color: "bg-cyan-500" },
+              { name: "Shehin", role: "Vice President", color: "bg-indigo-500" }
+            ].map((member, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -12, transition: { duration: 0.3 } }}
-                transition={{ delay: i * 0.1 }}
                 viewport={{ once: true }}
-                className={`p-10 rounded-[3.5rem] flex flex-col relative overflow-hidden transition-all duration-500 group ${plan.spotlight ? 'bg-mocha-800 border-2 border-gold-500 shadow-[0_30px_100px_rgba(212,175,55,0.15)] scale-105 z-10' : 'glass border-white/5 hover:border-white/20'}`}
+                transition={{ delay: idx * 0.1 }}
+                className="glass p-8 rounded-[2.5rem] text-center border-white/5 hover:border-purple-500/30 transition-all group"
               >
-                 {plan.spotlight && <div className="absolute top-0 right-0 bg-gold-500 text-mocha-950 text-[10px] font-mono font-bold px-6 py-2 rounded-bl-3xl uppercase tracking-widest shadow-xl">Most Popular</div>}
-                 <h4 className="text-3xl font-serif font-bold text-white mb-2 italic tracking-tight">{plan.name}</h4>
-                 <div className="flex items-baseline gap-2 mb-10">
-                    <span className="text-6xl font-serif font-bold text-white">{plan.price}</span>
-                    {plan.price !== "Free" && <span className="text-mocha-500 text-lg">/mo</span>}
-                 </div>
-                 <div className="space-y-5 mb-12 flex-1">
-                    {plan.items.map((item, j) => (
-                      <div key={j} className="flex items-center gap-4 text-mocha-300 text-sm italic">
-                         <div className="w-1.5 h-1.5 bg-gold-500 rounded-full shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
-                         {item}
-                      </div>
-                    ))}
-                 </div>
-                 <button 
-                   onClick={plan.action}
-                   disabled={plan.disabled}
-                   className={`w-full py-5 rounded-[2rem] font-bold text-lg transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 ${plan.spotlight ? 'bg-gold-500 text-mocha-950 shadow-2xl hover:bg-gold-400' : 'glass border-white/20 text-white hover:bg-white/10'}`}
-                 >
-                    {plan.button}
-                 </button>
+                <div className={`w-24 h-24 mx-auto ${member.color} rounded-full flex items-center justify-center text-white text-3xl font-black mb-6 shadow-2xl group-hover:scale-110 transition-transform`}>
+                   {member.name.substring(0, 2).toUpperCase()}
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">{member.name}</h3>
+                <span className={`inline-block px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white ${member.color} bg-opacity-80`}>
+                   {member.role}
+                </span>
               </motion.div>
             ))}
-         </div>
+          </div>
+        </div>
       </section>
 
-      {/* Future Vision Section */}
-      <section className="py-24 px-6 bg-mocha-950 overflow-hidden relative">
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
-           <div className="w-px h-24 bg-gradient-to-b from-transparent to-gold-500 mb-12" />
-           <h2 className="text-5xl md:text-7xl font-serif font-bold text-white mb-12 italic leading-tight">Beyond Apps. <br />Your Companion for the <br />Autonomous Age.</h2>
-           
-           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-20 w-full">
-              {[
-                { title: "Mobile Essence", desc: "Your personal AI follows you everywhere, adapting to your location and context.", icon: <Sparkles size={24} /> },
-                { title: "Digital Blueprint", desc: "We learn your unique workflows and suggest optimizations in real-time.", icon: <Play size={24} /> },
-                { title: "Universal Bridge", desc: "Connect Mocha to any API or hardware. The only limit is your imagination.", icon: <ArrowRight size={24} /> }
-              ].map((item, i) => (
-                <div key={i} className="glass p-10 rounded-[3rem] text-left hover:bg-white/10 transition-colors group">
-                   <div className="w-16 h-16 bg-mocha-800 rounded-2xl flex items-center justify-center text-gold-500 mb-8 group-hover:scale-110 transition-transform">
-                      {item.icon}
+      {/* Students Section */}
+      <section id="students" className="py-24 px-6 bg-black/20">
+        <div className="max-w-7xl mx-auto">
+           <div className="flex flex-col md:flex-row items-end justify-between gap-8 mb-16">
+              <div>
+                 <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-4">The Students</h2>
+                 <p className="text-cream-text/40 text-lg">Excellence in diversity, united by vision</p>
+              </div>
+              <div className="flex items-center gap-4 text-[10px] font-mono tracking-[0.3em] uppercase text-mocha-300">
+                 <span className="w-12 h-px bg-white/10" />
+                 Showing 17 members
+                 <span className="w-12 h-px bg-white/10" />
+              </div>
+           </div>
+
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {['Bishar', 'Aman', 'Rayyan', 'Khalil', 'Nadih', 'Midlaj', 'Ziyad', 'Anzil', 'Hisham', 'Shadi', 'Fawaz', 'Amin', 'Ashkar', 'Nihal', 'Razi', 'Yasin', 'Munfis'].map((name, i) => (
+                <div key={i} className="glass border-white/5 rounded-3xl overflow-hidden group hover:border-purple-500/40 transition-all">
+                   <div className="aspect-[4/5] relative bg-mocha-900 flex items-center justify-center">
+                      <span className="text-8xl font-black text-white/5 uppercase select-none">{name.substring(0, 2)}</span>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute bottom-6 left-6">
+                        <h4 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">{name}</h4>
+                        <p className="text-[10px] font-mono text-mocha-500 uppercase tracking-widest">Mocha AI Scholar</p>
+                      </div>
                    </div>
-                   <h4 className="text-2xl font-serif font-bold text-white mb-4 italic">{item.title}</h4>
-                   <p className="text-mocha-400 leading-relaxed italic">{item.desc}</p>
                 </div>
               ))}
            </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-20 px-6 border-t border-mocha-800">
-         <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-16">
-            <div className="col-span-2">
-               <div className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 bg-gold-500 rounded-lg flex items-center justify-center text-mocha-950">
-                  <Coffee size={18} />
+      {/* Events Section */}
+      <section id="events" className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-7xl font-display font-bold text-white mb-6">Events & Activities</h2>
+            <p className="text-cream-text/40 text-lg">Join us at our upcoming events and create lasting memories</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12">
+             <div className="glass p-8 rounded-[3rem] border-white/5 hover:border-purple-500/30 transition-all overflow-hidden relative group">
+                <div className="aspect-video rounded-2xl overflow-hidden mb-8">
+                   <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?q=80&w=2676&auto=format&fit=crop" alt="Iftar" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
-                <span className="font-serif text-xl font-bold text-white italic">Mocha AI</span>
-              </div>
-              <p className="text-mocha-400 max-w-sm leading-relaxed italic">
-                From the first bean to the final byte, we provide the intelligence that fuels your most daring ideas. Join the future of human-AI collaboration.
-              </p>
-            </div>
-            <div>
-               <h5 className="text-white font-serif font-bold mb-6 text-lg italic">Platform</h5>
-               <ul className="space-y-3 text-mocha-500 text-sm">
-                  <li><a href="#" className="hover:text-gold-400">Features</a></li>
-                  <li><a href="#" className="hover:text-gold-400">Security</a></li>
-                  <li><a href="#" className="hover:text-gold-400">Integrations</a></li>
-                  <li><a href="#" className="hover:text-gold-400">Enterprise</a></li>
-               </ul>
-            </div>
-            <div>
-               <h5 className="text-white font-serif font-bold mb-6 text-lg italic">Company</h5>
-               <ul className="space-y-3 text-mocha-500 text-sm">
-                  <li><a href="#" className="hover:text-gold-400">About Us</a></li>
-                  <li><a href="#" className="hover:text-gold-400">Privacy Policy</a></li>
-                  <li><a href="#" className="hover:text-gold-400">Terms of Roast</a></li>
-                  <li><a href="#" className="hover:text-gold-400">Contact</a></li>
-               </ul>
-            </div>
-         </div>
-         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 pt-10 border-t border-mocha-900">
-            <p className="text-mocha-600 text-[10px] font-mono tracking-widest uppercase">© 2026 Mocha AI. All rights reserved.</p>
-            <div className="flex gap-8">
-               {['Twitter', 'Instagram', 'LinkedIn', 'YouTube'].map(social => (
-                 <a key={social} href="#" className="text-mocha-600 hover:text-gold-500 transition-colors uppercase text-[10px] font-mono tracking-widest">
-                   {social}
-                 </a>
-               ))}
-            </div>
-         </div>
-      </footer>
-      {/* Floating Chat Trigger */}
-      <motion.button
-         initial={{ scale: 0 }}
-         animate={{ scale: 1 }}
-         onClick={onOpenApp}
-         className="fixed bottom-8 right-8 w-16 h-16 bg-gold-500 text-mocha-950 rounded-full shadow-[0_0_50px_rgba(212,175,55,0.3)] flex items-center justify-center group z-[100] border-4 border-mocha-950"
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-[10px] font-bold uppercase tracking-widest mb-6">
+                   <Zap size={10} /> Class Interaction
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-4">Iftar Meet 2026</h3>
+                <p className="text-cream-text/60 leading-relaxed mb-8">
+                  A beautiful gathering of students and mentors to celebrate the spirit of Ramadan together with prayer, reflection, and community.
+                </p>
+                <div className="flex items-center gap-6 text-sm font-mono text-mocha-400">
+                   <span className="flex items-center gap-2">📅 March 14, 2026</span>
+                   <span className="flex items-center gap-2">📍 Thamarassery</span>
+                </div>
+             </div>
+
+             <div className="flex flex-col gap-8">
+                {[
+                  { title: "Tech Symposium", date: "April 05, 2026", icon: <Brain size={20} /> },
+                  { title: "Sports Meet", date: "May 12, 2026", icon: <Zap size={20} /> },
+                  { title: "Alumni Meet", date: "June 20, 2026", icon: <GraduationCap size={20} /> }
+                ].map((ev, i) => (
+                  <div key={i} className="glass p-8 rounded-[2rem] border-white/5 flex items-center justify-between group hover:bg-white/5 transition-all">
+                     <div className="flex items-center gap-6">
+                        <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                           {ev.icon}
+                        </div>
+                        <div>
+                           <h4 className="text-xl font-bold text-white">{ev.title}</h4>
+                           <p className="text-mocha-500 text-sm mt-1">{ev.date}</p>
+                        </div>
+                     </div>
+                     <ArrowRight className="text-mocha-700 group-hover:translate-x-2 transition-transform" />
+                  </div>
+                ))}
+             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section id="gallery" className="py-24 px-6 bg-black/20">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-20">
+             <h2 className="text-4xl md:text-6xl font-display font-bold text-white">Gallery</h2>
+             <div className="flex gap-4 p-2 bg-white/5 rounded-2xl border border-white/5">
+                <button className="px-8 py-3 bg-purple-600 text-white rounded-xl font-bold text-sm shadow-xl">Photos</button>
+                <button className="px-8 py-3 hover:bg-white/5 text-mocha-400 font-bold text-sm transition-all rounded-xl">Videos</button>
+             </div>
+          </div>
+
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
+             {[1,2,3,4,5,6].map((idx) => (
+               <div key={idx} className="break-inside-avoid glass rounded-3xl overflow-hidden border-white/5 group relative cursor-pointer">
+                  <img src={`https://images.unsplash.com/photo-${1500000000000 + idx * 1000000}?q=80&w=1000&auto=format&fit=crop`} alt="Gallery" className="w-full hover:scale-105 transition-all duration-700" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-purple-600 scale-0 group-hover:scale-100 transition-transform duration-500">
+                        <Sparkles size={20} />
+                     </div>
+                  </div>
+               </div>
+             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight">Contact <span className="text-purple-500">Us</span></h2>
+            <p className="text-cream-text/40 text-lg">Have questions? We'd love to hear from you.</p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-12">
+             <div className="lg:col-span-1 space-y-8">
+                <div className="glass p-10 rounded-[2.5rem] border-white/5">
+                   <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 mb-8">
+                      <Mail size={24} />
+                   </div>
+                   <h4 className="text-xl font-bold text-white mb-4">Email Us</h4>
+                   <p className="text-mocha-500 text-sm mb-2 italic">mocha.nexus@gmail.com</p>
+                   <p className="text-mocha-500 text-sm italic">support@mochaai.core</p>
+                </div>
+                <div className="glass p-10 rounded-[2.5rem] border-white/5">
+                   <div className="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 mb-8">
+                      <Smartphone size={24} />
+                   </div>
+                   <h4 className="text-xl font-bold text-white mb-4">Call Us</h4>
+                   <p className="text-mocha-500 text-sm mb-2 italic">+1 (555) 734-2910</p>
+                   <p className="text-mocha-500 text-sm italic">+1 (555) 902-1145</p>
+                </div>
+             </div>
+
+             <div className="lg:col-span-2 glass p-12 md:p-16 rounded-[3rem] border-white/5">
+                <form className="grid sm:grid-cols-2 gap-8" onSubmit={(e) => e.preventDefault()}>
+                   <div className="space-y-3">
+                      <label className="text-[10px] font-mono uppercase tracking-widest text-mocha-400 ml-4 font-bold">Full Name</label>
+                      <input type="text" placeholder="Your name" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-purple-500 transition-all outline-none" />
+                   </div>
+                   <div className="space-y-3">
+                      <label className="text-[10px] font-mono uppercase tracking-widest text-mocha-400 ml-4 font-bold">Email Address</label>
+                      <input type="email" placeholder="Your email" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-purple-500 transition-all outline-none" />
+                   </div>
+                   <div className="sm:col-span-2 space-y-3">
+                      <label className="text-[10px] font-mono uppercase tracking-widest text-mocha-400 ml-4 font-bold">Message</label>
+                      <textarea placeholder="How can we help?" rows={6} className="w-full bg-white/5 border border-white/10 rounded-3xl px-6 py-6 text-white focus:border-purple-500 transition-all outline-none resize-none" />
+                   </div>
+                   <div className="sm:col-span-2">
+                      <button className="w-full py-6 bg-purple-600 text-white rounded-3xl font-bold text-lg flex items-center justify-center gap-3 hover:bg-purple-500 shadow-2xl active:scale-[0.98] transition-all">
+                         Send Transmission <ArrowRight size={20} />
+                      </button>
+                   </div>
+                </form>
+             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto glass rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden border-white/5">
+           <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-500/5 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
+           
+           <h2 className="text-4xl md:text-7xl font-display font-bold text-cream-text mb-8 tracking-tighter">Ready to brew <span className="italic text-purple-400 font-serif">excellence?</span></h2>
+           <p className="max-w-xl mx-auto text-cream-text/50 text-lg mb-12">Join thousands of creatives and professionals using Mocha AI to supercharge their life.</p>
+           
+           <button 
+             onClick={onOpenApp}
+             className="px-12 py-6 bg-purple-600 text-white rounded-[2rem] font-bold text-xl shadow-[0_0_50px_rgba(147,51,234,0.4)] hover:bg-purple-500 transition-all active:scale-95"
+           >
+             Start Generating Now
+           </button>
+        </div>
+      </section>
+
+      {/* Floating Chat Button */}
+      <motion.button 
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={onOpenApp}
+        className="fixed bottom-10 right-10 z-[100] w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center shadow-[0_10px_40px_rgba(147,51,234,0.4)] border border-white/20 group"
       >
-         <Coffee size={28} className="group-hover:rotate-12 transition-transform" />
-         <div className="absolute -top-12 right-0 glass-dark px-3 py-1 rounded-lg text-[10px] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border-gold-500/20">
-            Fresh brew ready?
+         <MessageSquare size={28} className="group-hover:animate-bounce" />
+         <div className="absolute right-full mr-4 px-4 py-2 bg-black/80 backdrop-blur-md rounded-xl text-white text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity border border-white/10 whitespace-nowrap pointer-events-none">
+            Chat with Mocha AI
          </div>
       </motion.button>
+
+      {/* Footer */}
+      <footer className="py-12 px-6 border-t border-white/5">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+             <Logo size={35} url={appLogoUrl} />
+             <span className="font-display font-bold text-cream-text tracking-tight italic uppercase">Mocha AI</span>
+          </div>
+          <p className="text-cream-text/20 text-xs font-mono uppercase tracking-widest leading-loose text-center md:text-left">© 2026 Mocha • Official AI Ecosystem • All Rights Reserved</p>
+          <div className="flex gap-8 text-xs font-mono uppercase tracking-[0.2em] text-cream-text/40">
+             <a href="#" className="hover:text-purple-400 transition-colors">Privacy</a>
+             <a href="#" className="hover:text-purple-400 transition-colors">Terms</a>
+             <a href="#" className="hover:text-purple-400 transition-colors">Status</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

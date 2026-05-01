@@ -3,34 +3,36 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", "Georgia", serif;
-  --font-display: "Outfit", sans-serif;
+  --font-display: "Poppins", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 
-  /* Premium Espresso Palette */
-  --color-mocha-950: #080707;   /* Onyx Black */
-  --color-mocha-900: #12100E;   /* Deep Espresso */
-  --color-mocha-800: #241D1A;   /* Coffee Bean */
-  --color-mocha-700: #3D322E;   /* Roasted Walnut */
-  --color-mocha-600: #5C4B44;   /* Warm Cocoa */
-  --color-mocha-500: #8A7269;   /* Taupe */
-  --color-mocha-400: #B29B8B;   /* Latte Base */
-  --color-mocha-200: #D9C5B2;   /* Milk Foam */
-  --color-mocha-100: #EFE5D9;   /* Cream Silk */
-  --color-mocha-50: #FAF6F1;    /* Porcelain */
+  /* Mocha AI Brand Palette */
+  --color-primary-black: #0F0F0F;
+  --color-mocha-brown: #3B2F2F;
+  --color-gold-accent: #D4AF37;
+  --color-cream-text: #F5E6D3;
+  --color-glow-gold: #FFD700;
 
-  /* Accents & Glows */
+  /* Functional Grays & Borders */
+  --color-mocha-950: #0F0F0F;
+  --color-mocha-900: #1A1A1A;
+  --color-mocha-800: #262626;
+  --color-mocha-700: #3B2F2F;
+  --color-mocha-600: #5C4B44;
+  --color-mocha-500: #8A7269;
+  --color-mocha-100: #F5E6D3;
+
   --color-gold-500: #D4AF37;
   --color-gold-400: #FAD02C;
-  --color-gold-600: #B8860B;
-  --color-neon-gold: #FFD700;
 }
 
 @layer base {
   body {
-    @apply bg-mocha-950 text-mocha-100 selection:bg-gold-500 selection:text-mocha-950 antialiased overflow-x-hidden;
+    @apply bg-primary-black text-cream-text selection:bg-gold-500 selection:text-primary-black antialiased overflow-x-hidden font-sans;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-tight;
+    @apply font-display font-bold tracking-tight;
   }
 }
 
@@ -44,7 +46,7 @@
   }
 
   .premium-card {
-    @apply bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 transition-all duration-500 hover:bg-white/[0.08] hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(212,175,55,0.1)];
+    @apply bg-mocha-800/40 backdrop-blur-2xl border border-white/10 rounded-[1.5rem] p-8 transition-all duration-500 hover:bg-white/[0.08] hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(212,175,55,0.1)];
   }
 
   .gold-glow {
@@ -52,26 +54,16 @@
   }
 
   .text-glow {
-    text-shadow: 0 0 20px rgba(212,175,55,0.5);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+
+  .btn-premium {
+    @apply bg-gold-accent text-primary-black px-6 py-3 rounded-[10px] font-semibold transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,175,55,0.3)];
   }
 
   .premium-gradient {
-    background: radial-gradient(circle at top left, #1B1816 0%, #080707 100%);
-  }
-
-  .animate-shake {
-    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-
-  @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
+    background: linear-gradient(135deg, #0F0F0F 0%, #3B2F2F 100%);
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');

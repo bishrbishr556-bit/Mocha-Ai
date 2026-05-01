@@ -2,10 +2,13 @@ import { motion } from 'motion/react';
 import { 
   BarChart3, Users, CreditCard, Activity, TrendingUp, 
   ArrowUpRight, ArrowDownRight, Coffee, Settings, Search,
-  Bell, ChevronRight, MoreVertical
+  Bell, ChevronRight, MoreVertical, Layers
 } from 'lucide-react';
+import { auth } from '../../lib/firebase';
+import Logo from '../ui/Logo';
 
-export default function Dashboard({ onBack, userPlan, onNavigate }: { onBack: () => void, userPlan: string, onNavigate: (v: string) => void }) {
+export default function Dashboard({ onBack, userPlan, onNavigate, appLogoUrl }: { onBack: () => void, userPlan: string, onNavigate: (v: string) => void, appLogoUrl?: string }) {
+  const user = auth.currentUser;
   const stats = [
     { label: "Active Roast Plan", value: userPlan.toUpperCase(), change: "Primary", positive: true, icon: <Coffee className="text-gold-500" /> },
     { label: "Total Brews", value: "24.5k", change: "+12.5%", positive: true, icon: <Activity className="text-gold-500" /> },
@@ -24,16 +27,15 @@ export default function Dashboard({ onBack, userPlan, onNavigate }: { onBack: ()
     <div className="min-h-screen bg-mocha-950 text-mocha-100 flex font-sans">
       {/* Sidebar */}
       <aside className="w-64 glass-dark border-r border-white/5 flex flex-col p-6 hidden lg:flex">
-         <div className="flex items-center gap-3 mb-12 cursor-pointer" onClick={onBack}>
-            <div className="w-10 h-10 bg-gold-500 rounded-xl flex items-center justify-center text-mocha-950">
-               <Coffee size={24} />
-            </div>
-            <span className="font-serif text-xl font-bold italic">Mocha AI</span>
-         </div>
+          <div className="flex items-center gap-3 mb-12 cursor-pointer" onClick={onBack}>
+            <Logo size={40} url={appLogoUrl} />
+            <span className="font-serif text-xl font-bold italic uppercase">Mocha AI</span>
+          </div>
 
          <nav className="flex-1 space-y-2">
             {[
               { label: 'Overview', icon: <BarChart3 size={20} />, active: true, id: 'dashboard' },
+              { label: 'Digital Loom', icon: <Layers size={20} />, id: 'loom' },
               { label: 'Chat Brew', icon: <Activity size={20} />, id: 'app' },
               { label: 'Settings', icon: <Settings size={20} />, id: 'settings' },
               { label: 'Back to Roast', icon: <ChevronRight size={20} />, id: 'back' },
@@ -76,7 +78,7 @@ export default function Dashboard({ onBack, userPlan, onNavigate }: { onBack: ()
                   <span className="absolute top-2 right-2 w-2 h-2 bg-gold-500 rounded-full" />
                </button>
                <div className="w-10 h-10 rounded-full bg-mocha-800 border border-white/10 overflow-hidden shrink-0 shadow-lg">
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mocha" alt="Profile" />
+                  <img src={user?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email || 'Mocha'}`} alt="Profile" className="w-full h-full object-cover" />
                </div>
             </div>
          </header>

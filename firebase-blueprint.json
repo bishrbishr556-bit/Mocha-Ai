@@ -20,9 +20,85 @@
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
       }
+    },
+    "UserSettings": {
+      "title": "User Settings",
+      "description": "Customizable user preferences and profile data",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "handle": { "type": "string" },
+        "bio": { "type": "string" },
+        "emailAlerts": { "type": "boolean" },
+        "pushAlerts": { "type": "boolean" },
+        "creativity": { "type": "number" },
+        "verbosity": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Student": {
+      "title": "Student Profile",
+      "description": "Student information managed via dashboard",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name"]
+    },
+    "SystemConfig": {
+      "title": "System Configuration",
+      "description": "Global settings and broadcasts",
+      "type": "object",
+      "properties": {
+        "broadcast": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "GalleryImage": {
+      "title": "Gallery Image",
+      "description": "Images displayed in the administrative gallery",
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "title": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["url", "title"]
+    },
+    "GalleryVideo": {
+      "title": "Gallery Video",
+      "description": "Videos displayed in the administrative gallery",
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "title": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["url", "title"]
     }
   },
   "firestore": {
+    "/gallery/{imageId}": {
+      "schema": "GalleryImage",
+      "description": "Global image gallery"
+    },
+    "/gallery_videos/{videoId}": {
+      "schema": "GalleryVideo",
+      "description": "Global video gallery"
+    },
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Global student directory"
+    },
+    "/system/config": {
+      "schema": "SystemConfig",
+      "description": "Global broadcast and config"
+    },
+    "/users/{userId}/config/settings": {
+      "schema": "UserSettings",
+      "description": "User's personalized platform settings"
+    },
     "/users/{userId}/chats/{chatId}": {
       "schema": "Chat",
       "description": "User's individual chat sessions"

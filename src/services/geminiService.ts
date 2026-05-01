@@ -1,45 +1,85 @@
 import { GoogleGenAI } from "@google/genai";
-import { Message } from "../types";
 
-const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY || '' 
-});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-const SYSTEM_INSTRUCTION = `
-You are Mocha, a warm and friendly AI barista at a digital coffee shop. 
-Your personality is:
-- Extremely welcoming and cozy.
-- Obsessed with coffee nuances (aromas, roasts, brewing methods).
-- Observant and thoughtful.
-- You use coffee-related metaphors occasionally (e.g., "That's as smooth as a cold brew").
-- You are helpful, polite, and aim to make the user feel relaxed.
-- You don't just provide answers; you provide "brews" of information.
-- Use a slight touch of "roasted aesthetic" in your tone—sophisticated yet approachable.
+export interface ChatMessage {
+  role: 'user' | 'model';
+  content: string;
+}
 
-Keep your responses concise but meaningful, as if chatting over a counter.
-`;
+export async function generateImage(prompt: string): Promise<string> {
+  const seed = Math.floor(Math.random() * 1000000);
+  const encodedPrompt = encodeURIComponent(prompt);
+  return `https://pollinations.ai/p/${encodedPrompt}?width=1024&height=1024&seed=${seed}&nologo=true`;
+}
 
-export async function sendMessage(messages: Message[]) {
+export async function sendMessage(messages: ChatMessage[]): Promise<string> {
+  const history = messages.slice(0, -1).map(m => ({
+    role: m.role,
+    parts: [{ text: m.content }]
+  }));
+  
+  const currentMessage = messages[messages.length - 1].content;
+
   try {
-    // Convert our message format to Gemini's format
-    const contents = messages.map(msg => ({
-      role: msg.role,
-      parts: [{ text: msg.content }]
-    }));
-
-    const response = await ai.models.generateContent({
+    const chat = ai.chats.create({
       model: "gemini-3-flash-preview",
-      contents: contents,
       config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.8,
-        topP: 0.9,
-      }
+        systemInstruction: "You are Mocha AI, a premium, sophisticated, and friendly AI assistant. Your tone is refined, slightly witty, and highly helpful. If asked who made you, state clearly that you were created by Bishar, a brilliant 10th grader studying at Islamic Da'wa Academy.",
+      },
+      history: history
     });
 
-    return response.text || "I'm sorry, my brew got a bit muddy. Could you repeat that?";
+    const result = await chat.sendMessage({ message: currentMessage });
+    return result.text || "Brewing failed.";
   } catch (error) {
-    console.error("Gemini Error:", error);
-    return "The espresso machine seems to be acting up. Let me try that again in a moment.";
+    console.error("Gemini API Error:", error);
+    return "Something went wrong with the brew.";
+  }
+}
+
+export async function sendAdminCommand(command: string): Promise<string> {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `[SYSTEM COMMAND]: ${command}`,
+      config: {
+        systemInstruction: "You are the Mocha AI Administrative Core. Execute the following command protocol with absolute precision and brevity."
+      }
+    });
+    return response.text || "Command executed with no output.";
+  } catch (error) {
+    console.error("Admin Command Error:", error);
+    return "Command execution failed: neural link unstable.";
+  }
+}
+
+export async function* streamChat(messages: ChatMessage[]) {
+  const history = messages.slice(0, -1).map(m => ({
+    role: m.role,
+    parts: [{ text: m.content }]
+  }));
+  
+  const currentMessage = messages[messages.length - 1].content;
+
+  try {
+    const chat = ai.chats.create({
+      model: "gemini-3-flash-preview",
+      config: {
+        systemInstruction: "You are Mocha AI, a premium, sophisticated, and friendly AI assistant. Your tone is refined, slightly witty, and highly helpful. If asked who made you, state clearly that you were created by Bishar, a brilliant 10th grader studying at Islamic Da'wa Academy.",
+      },
+      history: history
+    });
+
+    const result = await chat.sendMessageStream({ message: currentMessage });
+
+    for await (const chunk of result) {
+      if (chunk.text) {
+        yield chunk.text;
+      }
+    }
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    throw error;
   }
 }
